@@ -1,0 +1,16 @@
+---
+- name: LAB1 - Create VLAN Pool
+  connection: local
+  hosts: apic1
+
+  tasks:
+    - name: Create VLAN pool
+      cisco.aci.aci_vlan_pool:
+        host: apic1.dcloud.cisco.com
+        user: admin
+        password: C1sco12345
+        validate_certs: False
+        use_ssl: True
+        pool: mypool
+        pool_allocation_mode: static
+        state: present

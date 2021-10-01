@@ -1,0 +1,28 @@
+---
+- name: LAB1 - Create VLAN Pool
+  connection: local
+  hosts: apic1
+
+  vars:
+    ansible_host: apic1.dcloud.cisco.com
+    ansible_user: admin
+    ansible_password: C1sco12345
+    validate_cert: False
+    use_ssl: True
+
+    vlan_pools:
+      - mypool1
+      - mypool2
+
+  tasks:
+    - name: Create VLAN pools
+      cisco.aci.aci_vlan_pool:
+        host: "{{ ansible_host }}"
+        user: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ validate_cert }}"
+        use_ssl: "{{ use_ssl }}"
+        pool: "{{ item }}"
+        pool_allocation_mode: static
+        state: present
+      loop: "{{ vlan_pools }}" 
