@@ -1,6 +1,7 @@
 # Lab1
 
 ## Exercise 1
+- connection: local 사용
 ```
 ansible-playbook playbook1.yml
 ```
@@ -18,19 +19,20 @@ ansible-playbook playbook3.yml
 ```
 
 ## Exercise 4
-- vlan_pools 변수를 추가
+- vlan pool의 이름을 배열로 갖는 vlan_pools 변수를 추가
+- 2개의 task를 1개로 줄이고, task에 loop를 추가하여 vlan_pools 변수를 이용
 ```
 ansible-playbook playbook4.yml
 ```
 
 ## Exercise 5
-- vlan_pools 변수를 수정
+- vlan_pools 변수를 수정 (name, mode)
 ```
 ansible-playbook playbook5.yml
 ```
 
 ## Exercise 6
-- VLAN Encap Block 추가
+- VLAN Encap Block 관련 task와 variable을 추가
 ```
 ansible-playbook playbook6.yml
 ```
