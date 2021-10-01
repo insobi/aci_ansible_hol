@@ -45,7 +45,7 @@
         use_ssl: "{{ use_ssl }}"
         pool: "{{ item.name }}"
         pool_allocation_mode: "{{ item.mode }}"
-        state: absent
+        state: present
       loop: "{{ vlan_pools }}" 
 
     - name: VLAN encap block
@@ -60,5 +60,5 @@
         block_name: "{{ item.name }}"
         block_start: "{{ item.from }}"
         block_end: "{{ item.to }}"
-        state: absent
+        state: present
       loop: "{{ vlan_encap_blocks }}"
