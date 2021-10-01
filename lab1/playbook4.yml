@@ -1,5 +1,5 @@
 ---
-- name: LAB1 - Create VLAN Pool
+- name: LAB1
   connection: local
   hosts: apic1
 
