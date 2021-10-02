@@ -11,6 +11,6 @@
         password: C1sco12345
         validate_certs: False
         use_ssl: True
-        pool: mypool
+        pool: TEST-VLAN
         pool_allocation_mode: static
         state: present

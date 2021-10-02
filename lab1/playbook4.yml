@@ -11,8 +11,8 @@
     use_ssl: True
 
     vlan_pools:
-      - mypool1
-      - mypool2
+      - TEST-VLAN
+      - TEST2-VLAN
 
   tasks:
     - name: Create VLAN pools

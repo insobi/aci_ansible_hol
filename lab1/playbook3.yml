@@ -18,7 +18,7 @@
         password: "{{ ansible_password }}"
         validate_certs: "{{ validate_cert }}"
         use_ssl: "{{ use_ssl }}"
-        pool: mypool
+        pool: TEST-VLAN
         pool_allocation_mode: static
         state: present
 
@@ -29,6 +29,6 @@
         password: "{{ ansible_password }}"
         validate_certs: "{{ validate_cert }}"
         use_ssl: "{{ use_ssl }}"
-        pool: mypool2
+        pool: TEST2-VLAN
         pool_allocation_mode: static
         state: present

@@ -11,28 +11,28 @@
     use_ssl: True
 
     vlan_pools:
-      - name: mypool1
+      - name: TEST-VLAN
         mode: static
-      - name: mypool2
+      - name: TEST2-VLAN
         mode: static
-      - name: mypool3
+      - name: TEST3-VLAN
         mode: dynamic
 
     vlan_encap_blocks:
       - name: block1
-        from: 1000
-        to: 1199
-        pool: mypool1
+        from: 100
+        to: 100
+        pool: TEST-VLAN
         mode: static
       - name: block2
-        from: 1200
-        to: 1299
-        pool: mypool2
+        from: 1000
+        to: 1500
+        pool: TEST2-VLAN
         mode: static
       - name: block3
-        from: 1400
-        to: 1499
-        pool: mypool2
+        from: 2000
+        to: 2500
+        pool: TEST3-VLAN
         mode: static
 
   tasks:

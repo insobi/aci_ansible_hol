@@ -11,11 +11,11 @@
     use_ssl: True
 
     vlan_pools:
-      - name: mypool1
+      - name: TEST-VLAN
         mode: static
-      - name: mypool2
+      - name: TEST2-VLAN
         mode: static
-      - name: mypool3
+      - name: TEST3-VLAN
         mode: dynamic
 
   tasks:
