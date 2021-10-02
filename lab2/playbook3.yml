@@ -1,0 +1,68 @@
+---
+- name: LAB2
+  connection: local
+  hosts: apic1
+
+  vars:
+    aci_conn: &aci_conn
+      host: "{{ ansible_host }}"
+      user: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: "{{ validate_certs }}"
+      use_ssl: "{{ use_ssl }}"
+      
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Create VLAN pools
+      cisco.aci.aci_vlan_pool:
+        <<: *aci_conn
+        pool: "{{ item.name }}"
+        pool_allocation_mode: "{{ item.mode }}"
+        state: present
+      loop: "{{ vlan_pools }}" 
+
+    - name: VLAN encap block
+      cisco.aci.aci_vlan_pool_encap_block:
+        <<: *aci_conn
+        pool: "{{ item.pool }}"
+        pool_allocation_mode: "{{ item.mode }}"
+        block_name: "{{ item.name }}"
+        block_start: "{{ item.from }}"
+        block_end: "{{ item.to }}"
+        state: present
+      loop: "{{ vlan_encap_blocks }}"
+
+    - name: Physical domain
+      cisco.aci.aci_domain:
+        <<: *aci_conn
+        domain: "{{ item.physDomName }}"
+        domain_type: "{{ item.type }}"
+        state: present
+      loop: "{{ physical_domains }}"
+
+    - name: CDP Interface Policy to enable CDP
+      cisco.aci.aci_interface_policy_cdp:
+        <<: *aci_conn
+        name: "{{ item.cdpPolicyName }}"
+        admin_state: "{{ item.adminSt }}"
+        state: present
+      loop: "{{ cdp_policies }}"
+
+    - name: AEP
+      cisco.aci.aci_aep:
+        <<: *aci_conn
+        aep: "{{ item.aaepName }}"
+        infra_vlan:  "{{ item.infra_vlan }}"
+        state: present
+      loop: "{{ aaeps }}"
+
+    - name: Binding AEP to Domain
+      cisco.aci.aci_aep_to_domain:
+        <<: *aci_conn
+        aep: "{{ item.aaepName }}"
+        domain: "{{ item.domain }}"
+        domain_type: "{{ item.domain_type }}"
+        state: present
+      loop: "{{ aaeps }}"
