@@ -1,0 +1,62 @@
+---
+interface_policy_groups:
+  - interface_policy: TEST-POLICY
+    cdp_policy: CDP-Enable
+    aep: TEST-AEP
+    lag_type: leaf
+    state: absent
+
+interface_profiles:
+  - name: LEAF-101
+    state: absent
+  - name: LEAF-102
+    state: absent
+
+interface_selectors:
+  - name: LEAF-101-SEL
+    profile_name: LEAF-101
+    interface_policy: TEST-POLICY
+    port_blk: block1
+    fromPort: 1
+    toPort: 1
+    state: absent
+  - name: LEAF-101-SEL
+    profile_name: LEAF-101
+    interface_policy: TEST-POLICY
+    port_blk: block2
+    fromPort: 3
+    toPort: 3
+    state: absent
+  - name: LEAF-102-SEL
+    profile_name: LEAF-102
+    interface_policy: TEST-POLICY
+    port_blk: block1
+    fromPort: 1
+    toPort: 48
+    state: absent
+
+switch_profiles:
+  - name: LEAF-101
+    state: absent
+  - name: LEAF-102
+    state: absent
+
+switch_selectors:
+  - profile_name: LEAF-101
+    leaf_name: LEAF-101
+    leaf_from: 101
+    leaf_to: 101
+    state: absent
+  - profile_name: LEAF-102
+    leaf_name: LEAF-102
+    leaf_from: 102
+    leaf_to: 102
+    state: absent
+
+bind_interface_seletor_to_switch:
+  - leaf_profile: LEAF-101
+    interface_profile: LEAF-101
+    state: absent
+  - leaf_profile: LEAF-102
+    interface_profile: LEAF-102
+    state: absent
