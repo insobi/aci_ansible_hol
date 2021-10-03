@@ -20,7 +20,7 @@
         <<: *aci_conn
         pool: "{{ item.name }}"
         pool_allocation_mode: "{{ item.mode }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ vlan_pools }}" 
 
     - name: VLAN encap block
@@ -31,38 +31,38 @@
         block_name: "{{ item.name }}"
         block_start: "{{ item.from }}"
         block_end: "{{ item.to }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ vlan_encap_blocks }}"
 
     - name: Physical domain
       cisco.aci.aci_domain:
         <<: *aci_conn
-        domain: "{{ item.physDomName }}"
+        domain: "{{ item.name }}"
         domain_type: "{{ item.type }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ physical_domains }}"
 
     - name: CDP Interface Policy to enable CDP
       cisco.aci.aci_interface_policy_cdp:
         <<: *aci_conn
-        name: "{{ item.cdpPolicyName }}"
+        name: "{{ item.name }}"
         admin_state: "{{ item.adminSt }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ cdp_policies }}"
 
     - name: AEP
       cisco.aci.aci_aep:
         <<: *aci_conn
-        aep: "{{ item.aaepName }}"
+        aep: "{{ item.name }}"
         infra_vlan:  "{{ item.infra_vlan }}"
-        state: present
-      loop: "{{ aaeps }}"
+        state: "{{ item.state }}"
+      loop: "{{ aeps }}"
 
     - name: Binding AEP to Domain
       cisco.aci.aci_aep_to_domain:
         <<: *aci_conn
-        aep: "{{ item.aaepName }}"
+        aep: "{{ item.name }}"
         domain: "{{ item.domain }}"
         domain_type: "{{ item.domain_type }}"
-        state: present
-      loop: "{{ aaeps }}"
+        state: "{{ item.state }}"
+      loop: "{{ aeps }}"
