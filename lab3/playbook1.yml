@@ -34,7 +34,7 @@
         state: "{{ item.state }}"
       loop: "{{ interface_profiles }}"
 
-    - name: Binding Interace Profile and Interface
+    - name: Associate an Interface Access Port Selector to an Interface Policy Leaf Profile with a Policy Group
       cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
         <<: *aci_login
         access_port_selector: "{{ item.name }}"
