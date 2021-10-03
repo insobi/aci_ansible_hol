@@ -1,0 +1,46 @@
+---
+tenant:
+  name: TEST
+  state: present
+
+vrfs:
+  - name: TEST-VRF
+    state: present
+
+bridge_domains:
+  - name: WEB-BD
+    vrf: TEST-VRF
+    subnet: 10.0.1.254/24
+    state: present
+  - name: WAS-BD
+    vrf: TEST-VRF
+    subnet: 10.0.2.254/24
+    state: present
+  - name: DB-BD
+    vrf: TEST-VRF
+    subnet: 10.0.3.254/24
+    state: present
+
+app_profiles:
+  - name: TEST-AP
+    state: present
+
+epgs:
+  - name: WEB-EPG
+    ap: TEST-AP
+    bd: WEB-BD
+    domain: TEST-PHYS
+    domain_type: phys
+    state: present
+  - name: WAS-EPG
+    ap: TEST-AP
+    bd: WAS-BD
+    domain: TEST-PHYS
+    domain_type: phys
+    state: present
+  - name: DB-EPG
+    ap: TEST-AP
+    bd: DB-BD
+    domain: TEST-PHYS
+    domain_type: phys
+    state: present

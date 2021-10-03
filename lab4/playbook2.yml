@@ -1,0 +1,84 @@
+---
+- name: LAB4
+  connection: local
+  hosts: apic1
+
+  vars:
+    aci_conn: &aci_login
+      host: "{{ ansible_host }}"
+      user: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: "{{ validate_certs }}"
+      use_ssl: "{{ use_ssl }}"
+
+  vars_files:
+    - variables.yml
+
+  tasks:
+    - name: Tenant
+      aci_tenant:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        state: "{{ tenant.state }}"
+
+    - name: VRF
+      aci_vrf:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        vrf: "{{ item.name }}"
+        state: "{{ item.state }}"
+      loop: "{{ vrfs }}"
+      when: tenant.state == 'present'
+
+    - name: Bridge Domains
+      aci_bd:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        vrf: "{{ item.vrf }}"
+        bd: "{{ item.name }}"
+        state: "{{ item.state }}"
+      loop: "{{ bridge_domains }}"
+      when: tenant.state == 'present'
+
+    - name: Bridge Domain Subnets
+      aci_bd_subnet:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        bd: "{{ item.name }}"
+        gateway: "{{ item.subnet.split('/').0 }}" # "{{ item.subnet.split('/') | first }}"
+        mask: "{{ item.subnet.split('/').1 }}"    # "{{ item.subnet.split('/') | last }}"
+        state: "{{ item.state }}"
+      loop: "{{ bridge_domains }}"
+      when: tenant.state == 'present'
+
+    - name: Application Profile
+      aci_ap:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        ap: "{{ item.name }}"
+        state: "{{ item.state }}"
+      loop: "{{ app_profiles }}"
+      when: tenant.state == 'present'
+
+    - name: EPG
+      aci_epg:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        bd: "{{ item.bd }}"
+        ap: "{{ item.ap }}"
+        epg: "{{ item.name }}"
+        state: "{{ item.state }}"
+      with_items: "{{ epgs }}"
+      when: tenant.state == 'present'
+
+    - name: EPG to Domain
+      aci_epg_to_domain:
+        <<: *aci_login
+        tenant: "{{ tenant.name }}"
+        ap: "{{ item.ap }}"
+        epg: "{{ item.name }}"
+        domain: "{{ item.domain }}"
+        domain_type: "{{ item.domain_type }}"
+        state: "{{ item.state }}"
+      with_items: "{{ epgs }}"
+      when: tenant.state == 'present'
