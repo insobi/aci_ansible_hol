@@ -24,7 +24,7 @@
     - name: VRF
       aci_vrf:
         <<: *aci_login
-        tenant:       "{{ tenant.name }}"
+        tenant:       "{{ item.tenant }}"
         vrf:          "{{ item.name }}"
         state:        "{{ item.state }}"
       loop: "{{ vrfs }}"
@@ -33,7 +33,7 @@
     - name: Bridge Domains
       aci_bd:
         <<: *aci_login
-        tenant:         "{{ tenant.name }}"
+        tenant:         "{{ item.tenant }}"
         vrf:            "{{ item.vrf }}"
         bd:             "{{ item.name }}"
         state:          "{{ item.state }}"
@@ -43,7 +43,7 @@
     - name: Bridge Domain Subnets
       aci_bd_subnet:
         <<: *aci_login
-        tenant:         "{{ tenant.name }}"
+        tenant:         "{{ item.tenant }}"
         bd:             "{{ item.name }}"
         gateway:        "{{ item.subnet.split('/') | first }}"
         mask:           "{{ item.subnet.split('/') | last }}"
