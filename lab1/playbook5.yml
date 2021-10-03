@@ -13,10 +13,13 @@
     vlan_pools:
       - name: TEST-VLAN
         mode: static
+        state: present
       - name: TEST2-VLAN
         mode: static
+        state: present
       - name: TEST3-VLAN
         mode: dynamic
+        state: present
 
   tasks:
     - name: Create VLAN pools
@@ -28,5 +31,5 @@
         use_ssl: "{{ use_ssl }}"
         pool: "{{ item.name }}"
         pool_allocation_mode: "{{ item.mode }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ vlan_pools }}" 

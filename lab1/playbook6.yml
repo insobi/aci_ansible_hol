@@ -13,27 +13,33 @@
     vlan_pools:
       - name: TEST-VLAN
         mode: static
+        state: present
       - name: TEST2-VLAN
         mode: static
+        state: present
       - name: TEST3-VLAN
         mode: dynamic
+        state: present
 
     vlan_encap_blocks:
-      - name: block1
+      - name: TEST
         from: 100
-        to: 100
+        to:   100
         pool: TEST-VLAN
         mode: static
-      - name: block2
+        state: present
+      - name: TEST
         from: 1000
-        to: 1500
+        to:   1500
         pool: TEST2-VLAN
         mode: static
-      - name: block3
+        state: present
+      - name: TEST
         from: 2000
-        to: 2500
-        pool: TEST3-VLAN
+        to:   2500
+        pool: TEST2-VLAN
         mode: static
+        state: present
 
   tasks:
     - name: Create VLAN pools
@@ -45,7 +51,7 @@
         use_ssl: "{{ use_ssl }}"
         pool: "{{ item.name }}"
         pool_allocation_mode: "{{ item.mode }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ vlan_pools }}" 
 
     - name: VLAN encap block
@@ -60,5 +66,5 @@
         block_name: "{{ item.name }}"
         block_start: "{{ item.from }}"
         block_end: "{{ item.to }}"
-        state: present
+        state: "{{ item.state }}"
       loop: "{{ vlan_encap_blocks }}"
