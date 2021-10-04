@@ -12,7 +12,7 @@
       use_ssl: "{{ use_ssl }}"
 
   vars_files:
-    - variables.yml
+    - vars_tenant1.yml
 
   tasks:
     - name: Check Tenant
