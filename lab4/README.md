@@ -1,5 +1,17 @@
 # Lab1
 
 ## Exercise 1
+- Tenant 생성
+- VRF 생성
+- Bridge Domain 생성
+```
+ansible-playbook playbook1.yml
+```
 
 ## Exercise 2
+- Application Profile 생성
+- EPG 생성
+- EPG를 Domain에 연결
+```
+ansible-playbook playbook2.yml
+```
