@@ -1,0 +1,87 @@
+---
+- name: LAB5-3
+  connection: local
+  hosts: apic1
+
+  vars:
+    aci_conn: &aci_login
+      host: "{{ ansible_host }}"
+      user: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: "{{ validate_certs }}"
+      use_ssl: "{{ use_ssl }}"
+    
+    THRESHOLD: 100
+
+  tasks:
+    - name: Fault 정보 수집
+      aci_rest:
+        <<: *aci_login
+        path: "/api/node/class/faultSummary.json?query-target-filter=or(eq(faultSummary.severity,\"critical\"),eq(faultSummary.severity,\"major\"))&order-by=faultSummary.severity|desc"
+        method: get
+      register: faults_system
+
+    - name: 시스템 Health 정보 수집
+      aci_rest:
+        <<: *aci_login
+        path: "/api/mo/topology/health.json"
+        method: get
+      register: health_system
+
+    - name: 토폴로지 Health 정보 수집
+      aci_rest:
+        <<: *aci_login
+        path: "/api/node/class/topSystem.json?rsp-subtree-include=health,required"
+        method: get
+      register: health_topology
+
+    - name: 테넌트 Health 정보 수집
+      aci_rest:
+        <<: *aci_login      
+        path: /api/class/fvTenant.json?rsp-subtree-include=health,required&rsp-subtree-filter=le(healthInst.cur,"{{ THRESHOLD }}")
+        method: get
+      register: health_tenant
+
+    - name: 수집 정보를 파일로 저장
+      copy:
+        content: "{{ item.content | to_nice_json }}"
+        dest:    "{{ item.dest }}"
+      loop:
+        - content:  "{{ health_system }}"
+          dest:     health_system.json
+        - content:  "{{ health_topology }}"
+          dest:     health_topology.json
+        - content:  "{{ health_tenant }}"
+          dest:     health_tenant.json
+      no_log: yes
+
+    - name: 템플릿을 이용하여 수집데이터 변환
+      template: 
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - src: template/faults_report.j2
+          dest: faults_report.md
+        - src: template/health_report.j2
+          dest: health_report.md
+
+    - name: Webex 전송 메시지 읽기
+      debug: msg="{{lookup('file', 'faults_report.md') }}"
+      register:   faults_report
+      no_log: yes 
+
+    - name: Webex 전송 메시지 읽기(2)
+      debug: msg="{{lookup('file', 'health_report.md') }}"
+      register:   health_tenant_message
+      no_log: true 
+
+    - name: Webex 메시지 전송
+      cisco_spark:
+        recipient_type:   roomId
+        recipient_id:     "{{ roomID }}"
+        message_type:     markdown
+        personal_token:   "{{ bot_token }}"
+        message:          "{{ item }}"
+      loop:
+        - "{{ faults_report.msg }}"
+        - "{{ health_tenant_message.msg }}"
