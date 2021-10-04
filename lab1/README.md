@@ -1,5 +1,7 @@
 # Lab1
 
+![](../images/lab1.png)
+
 ## Exercise 1
 - connection: local 사용
 ```
