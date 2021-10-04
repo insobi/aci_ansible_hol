@@ -4,4 +4,5 @@
 lab5/*.json
 lab5/*.xlsx
 lab5/*report.md
-lab5/vars_webex.yml
+
+**/*.tmp

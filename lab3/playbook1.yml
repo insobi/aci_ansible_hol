@@ -55,7 +55,7 @@
         state: "{{ item.state }}"
       loop: "{{ switch_profiles }}"
 
-    - name: Binding Swith Profile and Switch
+    - name: Adding a switch policy leaf profile selector associated Node Block range (w/ policy group)
       cisco.aci.aci_switch_leaf_selector:
         <<: *aci_login
         leaf_profile: "{{ item.profile_name }}"
