@@ -1,4 +1,4 @@
-# Lab1
+# Lab2
 
 ## Exercise 1
 - anchor와 alias를 이용하여 task 마다 중복되는 코드 수를 줄임 (login 관련 parameters)
