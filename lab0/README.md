@@ -5,7 +5,8 @@
 
 <br>
 
-## dCloud VM - Ansible Upgrade
+## Ansible Control VM
+- Ansible 버전 업그레이드
 ```
 VERSION_ANSIBLE=2.9.13 
 VERSION_ANSIBLE_ACI=2.0.0 
@@ -17,3 +18,22 @@ ansible-galaxy collection install cisco.aci:==${VERSION_ANSIBLE_ACI}
 
 pip install openpyxl pandas paramiko
 ```
+
+- 버전 확인
+```
+# ansible --version
+ansible 2.9.13
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 2.7.5 (default, Apr  9 2019, 14:30:50) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]
+```
+
+<br>
+
+## dCloud ACI 접속
+![](../images/lab0_aci.png)
+- https://198.18.133.200
+- User ID: admin
+- Password: C1sco12345
