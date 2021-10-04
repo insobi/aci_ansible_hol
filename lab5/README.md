@@ -1,5 +1,7 @@
 # Lab5
 
+![](../images/lab5.png)
+
 ## Exercise 1
 - Physical Interface 상태 수집
 ```

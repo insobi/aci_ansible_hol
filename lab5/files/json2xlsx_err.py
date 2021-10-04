@@ -38,11 +38,12 @@ class json2xlsx_phys_err(object):
                     temp["SQETTest Errors"             ] = item_rmonDot3Stats['sQETTestErrors']
                     temp["Single Collision Frames"     ] = item_rmonDot3Stats['singleCollisionFrames']
                     temp["Symbol Errors"               ] = item_rmonDot3Stats['symbolErrors']
+                    break
 
             for item_rmonDot1d in rmonDot1d:
                 key = '/'.join(item_rmonDot1d['dn'].split('/')[:-1])
                 if key == dn:
-                    temp["Port in Discards"           ] = item_rmonDot1d['portInDiscards']
+                    temp["Port in Discards" ] = item_rmonDot1d['portInDiscards']
                     break
     
             for item_rmonEtherStats in rmonEtherStats:
@@ -50,6 +51,10 @@ class json2xlsx_phys_err(object):
                 if key == dn:
                     temp["CRC Align Errors"  ] = item_rmonEtherStats['cRCAlignErrors']
                     temp["Collisions"        ] = item_rmonEtherStats['collisions']
+                    break
+            
+            if len(temp) == 1:
+                temp["dummy"] = "---"
 
             data_new.append(temp)
 
