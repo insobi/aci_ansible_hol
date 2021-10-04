@@ -1,0 +1,59 @@
+---
+- name: LAB5-2
+  connection: local
+  hosts: apic1
+
+  vars:
+    aci_conn: &aci_login
+      host: "{{ ansible_host }}"
+      user: "{{ ansible_user }}"
+      password: "{{ ansible_password }}"
+      validate_certs: "{{ validate_certs }}"
+      use_ssl: "{{ use_ssl }}"
+
+  tasks:
+    - name: l1PhysIf 수집
+      aci_rest:
+        <<: *aci_login
+        path: /api/class/l1PhysIf.json
+        method: get
+      register: l1PhysIf
+
+    - name: rmonDot3Stats 수집
+      aci_rest:
+        <<: *aci_login
+        path: /api/class/l1PhysIf.json?query-target=children&target-subtree-class=rmonDot3Stats
+        method: get
+      register: rmonDot3Stats
+
+    - name: rmonDot1d 수집
+      aci_rest:
+        <<: *aci_login
+        path: /api/class/l1PhysIf.json?query-target=children&target-subtree-class=rmonDot1d
+        method: get
+      register: rmonDot1d
+
+    - name: rmonEtherStats 수집
+      aci_rest:
+        <<: *aci_login
+        path: /api/class/l1PhysIf.json?query-target=children&target-subtree-class=rmonEtherStats
+        method: get
+      register: rmonEtherStats
+
+    - name: 수집 데이터를 파일로 저장
+      copy:
+        content: "{{ item.content | to_nice_json }}" 
+        dest:    "{{ item.dest }}" 
+      no_log: True
+      loop:
+        - content:  "{{ l1PhysIf | json_query('imdata[].l1PhysIf.attributes.dn')}}" 
+          dest:     l1PhysIf.json   
+        - content:  "{{ rmonDot3Stats | json_query('imdata[].rmonDot3Stats.attributes')}}" 
+          dest:     rmonDot3Stats.json
+        - content:  "{{ rmonDot1d | json_query('imdata[].rmonDot1d.attributes')}}" 
+          dest:     rmonDot1d.json
+        - content:  "{{ rmonEtherStats | json_query('imdata[].rmonEtherStats.attributes')}}" 
+          dest:     rmonEtherStats.json
+
+    - name: Json 파일을 엑셀 파일로 변환
+      command: python3 files/json2xlsx_err.py
