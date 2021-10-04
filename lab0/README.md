@@ -29,6 +29,12 @@ ansible 2.9.13
   executable location = /usr/bin/ansible
   python version = 2.7.5 (default, Apr  9 2019, 14:30:50) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]
 ```
+- Lab 소스 다운로드
+```
+git clone https://github.com/insobi/aci_ansible_hol.git
+cd aci_ansible_hol
+ls -l
+```
 
 <br>
 
