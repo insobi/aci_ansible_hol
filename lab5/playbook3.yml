@@ -12,6 +12,9 @@
       use_ssl: "{{ use_ssl }}"
     
     THRESHOLD: 100
+  
+  vars_files:
+    - vars_webex.yml
 
   tasks:
     - name: Fault 정보 수집

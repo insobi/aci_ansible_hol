@@ -1,2 +1,7 @@
 **/.DS_Store
 .devcontainer
+
+lab5/*.json
+lab5/*.xlsx
+lab5/*.md
+lab5/vars_webex.yml
