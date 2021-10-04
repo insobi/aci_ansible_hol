@@ -56,7 +56,7 @@
           dest:     rmonEtherStats.json
 
     - name: Json 파일을 엑셀 파일로 변환
-      command: python3 files/json2xlsx_err.py
+      command: python files/json2xlsx_err.py
 
     # - name: 엑셀파일 이메일 전송 (엑셀파일 첨부)
     #   mail:
@@ -72,4 +72,4 @@
     #     secure:   starttls
     #     headers:  "Content-type=text/html"
     #     attach: 
-    #       - "./인터페이스_에러.xlsx"
+    #       - "./Interface_Err.xlsx"

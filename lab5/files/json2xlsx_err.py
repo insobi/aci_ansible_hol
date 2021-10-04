@@ -59,7 +59,7 @@ class json2xlsx_phys_err(object):
             data_new.append(temp)
 
         df = pd.DataFrame(data_new)
-        df.to_excel(self.XLSX_PATH + "인터페이스_에러.xlsx")
+        df.to_excel(self.XLSX_PATH + "Interface_Err.xlsx")
 
 if __name__ == "__main__":
     func = json2xlsx_phys_err()
