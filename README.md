@@ -1,6 +1,6 @@
 # ACI Ansible Hands-on Lab
 
-## Lab 환경 접속방법
-
-## Ansible Collection - Cisco ACI
+## References
+- https://docs.ansible.com/ansible/latest/collections/cisco/aci/index.html
 - https://galaxy.ansible.com/cisco/aci
+- https://dcloud.cisco.com/
