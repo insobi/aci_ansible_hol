@@ -57,3 +57,19 @@
 
     - name: Json 파일을 엑셀 파일로 변환
       command: python3 files/json2xlsx_err.py
+
+    # - name: 엑셀파일 이메일 전송 (엑셀파일 첨부)
+    #   mail:
+    #     host:     "{{ mail_host }}"
+    #     port:     "{{ mail_port }}"
+    #     username: "{{ mail_username }}"
+    #     password: "{{ mail_password }}"
+    #     from:     "{{ mail_sender }}"
+    #     to :      "{{ mail_receiver }}"
+    #     subject:  "[ACI Ansible HOL] 인터페이스 상태 알림 메일"
+    #     subtype:  html
+    #     body:     "<center><img width=1000 height=562 src=\"https://storage.googleapis.com/blogs-images/ciscoblogs/1/2020/05/Slide1-1.jpeg\"><h1>Cisco Customer Success는<br>고객 여러분의 성공을 도와드립니다.</h1></center>"
+    #     secure:   starttls
+    #     headers:  "Content-type=text/html"
+    #     attach: 
+    #       - "./인터페이스_에러.xlsx"

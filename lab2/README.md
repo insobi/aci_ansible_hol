@@ -6,11 +6,16 @@
 - Policies
 - AEP
 
+<br>
+
 ## Exercise 1
 - anchor와 alias를 이용하여 task 마다 중복되는 코드 수를 줄임 (login 관련 parameters)
 ```
 ansible-playbook playbook1.yml
 ```
+
+
+<br>
 
 ## Exercise 2
 - Inventory에 ACI 로그인 관련 parameter를 추가
@@ -18,6 +23,9 @@ ansible-playbook playbook1.yml
 ```
 ansible-playbook playbook2.yml
 ```
+
+
+<br>
 
 ## Exercise 3
 - 새로운 task를 추가
