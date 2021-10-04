@@ -28,3 +28,4 @@
           dest: ethpmPhysIf.json
         - content: "{{ ethpmPhysIf | json_query('imdata[].ethpmPhysIf.attributes.{dn:dn, operSt:operSt, operMode:operMode, operSpeed:operSpeed}') }}"
           dest: ethpmPhysIf_mod.json
+      no_log: True

@@ -1,11 +1,6 @@
 #!/bin/bash
 
-VERSION_ANSIBLE=2.9.13 
-VERSION_ANSIBLE_ACI=2.0.0 
-
 yes | pip uninstall ansible
-pip install ansible==${VERSION_ANSIBLE}
+pip install ansible 
 
-ansible-galaxy collection install cisco.aci:==${VERSION_ANSIBLE_ACI} 
-
-pip install openpyxl pandas paramiko
+pip install openpyxl pandas

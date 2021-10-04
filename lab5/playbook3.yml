@@ -84,7 +84,7 @@
         recipient_id:     "{{ roomID }}"
         message_type:     markdown
         personal_token:   "{{ bot_token }}"
-        message:          "{{ item }}"
+        msg:          "{{ item }}"
       loop:
         - "{{ faults_report.msg }}"
         - "{{ health_tenant_message.msg }}"
