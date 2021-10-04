@@ -1,5 +1,7 @@
 # Lab4
 
+![](../images/lab4.png)
+
 ## Exercise 1
 - Tenant 생성
 - VRF 생성
