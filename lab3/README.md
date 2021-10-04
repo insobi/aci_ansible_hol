@@ -2,6 +2,9 @@
 
 ![](../images/lab3.png)
 
+- Interface Profile
+- Switch Profile
+
 ## Exercise 1
 - Leaf Access Port Policy Group 생성
 - Interface Leaf profile, Selector 생성

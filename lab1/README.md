@@ -2,6 +2,8 @@
 
 ![](../images/lab1.png)
 
+- vlan_pools
+
 ## Exercise 1
 - connection: local 사용
 ```
