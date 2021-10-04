@@ -12,14 +12,14 @@
       use_ssl: "{{ use_ssl }}"
 
   tasks:
-    - name: API 호출 - 모든 인터페이스 상태 수집
+    - name: 인터페이스 상태 수집 (ethpmPhysIf)
       aci_rest:
         <<: *aci_login
         path: /api/class/ethpmPhysIf.json
         method: get
       register: ethpmPhysIf
 
-    - name: 수집 결과를 파일로 저장 (Json포맷)
+    - name: 수집 결과를 파일로 저장
       copy:
         content: "{{ item.content | to_nice_json }}" 
         dest:    "{{ item.dest }}"
