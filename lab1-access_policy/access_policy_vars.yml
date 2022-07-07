@@ -11,8 +11,6 @@ domains:
   - { name: "lab-dom",    domain_type: "phys"                       }
   - { name: "vmware-dom", domain_type: "vmm", vm_provider: "vmware" }
 
-link_level_policies:
-
 policy_cdp:
   - { name: "lab-dcp_enable", admin_state: true }
 
