@@ -1,0 +1,97 @@
+- hosts: CHANGEME
+  connection: CHANGEME
+  gather_facts: CHANGEME
+  collections:
+  - cisco.aci
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ CHANGEME }}" 
+      user:           "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}"
+      use_ssl:        "{{ CHANGEME }}"
+    
+    var_state: &var_state
+      state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
+ 
+  vars_files: tenant_vars.yml
+
+  tasks:
+  - name: task1 - Tenant
+    cisco.aci.aci_tenant:
+      <<: *apic_info
+      tenant: "{{ CHANGEME }}"
+      state:  "{{ state_all if state_all is defined else tenant.state if tenant.state is defined else 'present' }}"
+    register: task_tenant
+    tags: always, tn-task1
+
+  - name: task2 - VRF
+    cisco.aci.aci_vrf:
+      <<: *apic_info
+      <<: *var_state
+      tenant: "{{ CHANGEME }}"
+      vrf:    "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task2
+
+  - name: task3 - Bridge Domains
+    cisco.aci.aci_bd:
+      <<: *apic_info
+      <<: *var_state
+      tenant: "{{ CHANGEME }}"
+      vrf:    "{{ CHANGEME }}"
+      bd:     "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task3
+
+  - name: task4 - Bridge Domain Subnets
+    cisco.aci.aci_bd_subnet:
+      <<: *apic_info
+      <<: *var_state
+      tenant:  "{{ CHANGEME }}"
+      bd:      "{{ CHANGEME }}"
+      gateway: "{{ item.subnet.split('/') | first }}"
+      mask:    "{{ item.subnet.split('/') | last }}"
+      scope:   "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task4
+
+  - name: task5 - Application Profile
+    cisco.aci.aci_ap:
+      <<: *apic_info
+      <<: *var_state
+      tenant: "{{ CHANGEME }}"
+      ap:     "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task5
+
+  - name: task6 - EPG
+    cisco.aci.aci_epg:
+      <<: *apic_info
+      <<: *var_state
+      tenant: "{{ CHANGEME }}"
+      bd:     "{{ CHANGEME }}"
+      ap:     "{{ CHANGEME }}"
+      epg:    "{{ CHANGEME }}"
+    with_items: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task6
+
+  - name: task7 - EPG to Domain
+    cisco.aci.aci_epg_to_domain:
+      <<: *apic_info
+      <<: *var_state
+      tenant:      "{{ CHANGEME }}"
+      ap:          "{{ CHANGEME }}"
+      epg:         "{{ CHANGEME }}"
+      domain:      "{{ CHANGEME }}"
+      domain_type: "{{ CHANGEME }}"
+      vm_provider: "{{ CHANGEME }}"
+    with_items: "{{ CHANGEME }}"
+    when: task_tenant.current
+    tags: tn-task7

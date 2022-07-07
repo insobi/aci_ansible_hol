@@ -1,0 +1,163 @@
+- hosts: CHANGEME
+  connection: CHANGEME
+  gather_facts: CHANGEME
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ CHANGEME }}" 
+      user:           "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}"
+      use_ssl:        "{{ CHANGEME }}"
+    
+    var_state: &var_state
+      state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
+
+  vars_files: access_policy_vars.yml
+
+  tasks:
+  - name: Task1 - VLAN pool
+    cisco.aci.aci_vlan_pool:
+      <<: *apic_info
+      <<: *var_state
+      pool:                 "{{ CHANGEME }}"
+      pool_allocation_mode: "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task1, vlan_pool
+
+  - name: Task2 - VLAN encap block
+    cisco.aci.aci_vlan_pool_encap_block:
+      <<: *apic_info
+      <<: *var_state
+      pool:                 "{{ CHANGEME }}"
+      pool_allocation_mode: "{{ CHANGEME }}"
+      block_name:           ""
+      block_start:          "{{ CHANGEME }}"
+      block_end:            "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task2, vlan_pool, encap_block
+
+  - name: Task3a - Physical Domain
+    cisco.aci.aci_domain:
+      <<: *apic_info
+      <<: *var_state
+      domain:       "{{ CHANGEME }}"
+      domain_type:  "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: item.domain_type == "phys"
+    tags: accp-task3a, domain_phys
+
+  - name: Task3b - VMM Domain
+    cisco.aci.aci_domain:
+      <<: *apic_info
+      <<: *var_state
+      domain:       "{{ CHANGEME }}"
+      domain_type:  "{{ CHANGEME }}"
+      vm_provider:  "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    when: item.domain_type == "vmm"
+    tags: accp-task3b, domain_vmm
+
+  - name: Task4 - CDP Interface Policy
+    cisco.aci.aci_interface_policy_cdp:
+      <<: *apic_info
+      <<: *var_state
+      name:         "{{ CHANGEME }}"
+      admin_state:  "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task4, policy_group, policy_cdp
+
+  - name: Task5 - AEP
+    cisco.aci.aci_aep:
+      <<: *apic_info
+      <<: *var_state
+      aep:          "{{ CHANGEME }}"
+      infra_vlan:   "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task5, aep, vlan 
+
+  - name: Task6a - AEP to domain binding
+    cisco.aci.aci_aep_to_domain:
+      <<: *apic_info
+      <<: *var_state
+      aep:          "{{ CHANGEME }}"
+      domain:       "{{ CHANGEME }}"
+      domain_type:  "{{ CHANGEME }}"
+    loop: "{{ aeps }}"
+    when: item.domain_type == "phys"
+    tags: accp-task6a, aep, domain
+
+  - name: Task6b - AEP to domain binding
+    cisco.aci.aci_aep_to_domain:
+      <<: *apic_info
+      <<: *var_state
+      aep:          "{{ CHANGEME }}"
+      domain:       "{{ CHANGEME }}"
+      domain_type:  "{{ CHANGEME }}"
+      vm_provider:  "{{ CHANGEME }}"
+    loop: "{{ aeps }}"
+    when: item.domain_type == "vmm"
+    tags: accp-task6b, aep, domain
+
+  - name: Task7 - Leaf Access Port Policy Group
+    cisco.aci.aci_interface_policy_leaf_policy_group:
+      <<: *apic_info
+      <<: *var_state
+      policy_group: "{{ CHANGEME }}"
+      aep:          "{{ CHANGEME }}"
+      lag_type:     "{{ CHANGEME }}"
+      cdp_policy:   "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task7, policy_group, aep, policy_cdp
+
+  - name: Task8 - Leaf interface profile
+    cisco.aci.aci_interface_policy_leaf_profile:
+      <<: *apic_info
+      <<: *var_state
+      interface_profile:  "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task8, interface_profile
+
+  - name: Task9 - Association port Selector to an Leaf Profile with a Policy Group
+    cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+      <<: *apic_info
+      <<: *var_state
+      interface_profile:    "{{ CHANGEME }}"
+      access_port_selector: "{{ CHANGEME }}"
+      port_blk:             "{{ CHANGEME }}"
+      from_port:            "{{ CHANGEME }}"
+      to_port:              "{{ CHANGEME }}"
+      from_card:            "{{ CHANGEME }}"
+      to_card:              "{{ CHANGEME }}"
+      policy_group:         "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task9, interface_profile, policy_group
+
+  - name: Task10 - Leaf Profile
+    cisco.aci.aci_switch_policy_leaf_profile:
+      <<: *apic_info
+      <<: *var_state
+      leaf_profile: "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task10, leaf_profile
+
+  - name: Task11 - Switch policy leaf profile selector associated Node Block range (w/ policy group)
+    cisco.aci.aci_switch_leaf_selector:
+      <<: *apic_info
+      <<: *var_state
+      leaf_profile:  "{{ CHANGEME }}"
+      leaf:          "{{ CHANGEME }}"
+      leaf_node_blk: "{{ CHANGEME }}"
+      from:          "{{ CHANGEME }}"
+      to:            "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task11, leaf_profile, leaf_selector
+
+  - name: Task12 - Associating an interface selector profile to a switch policy leaf profile
+    cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+      <<: *apic_info
+      <<: *var_state
+      leaf_profile:       "{{ CHANGEME }}"
+      interface_selector: "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
+    tags: accp-task12, leaf_profile, interface_selector

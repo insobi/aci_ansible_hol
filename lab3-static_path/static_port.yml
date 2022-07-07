@@ -1,0 +1,41 @@
+- hosts: CHANGEME
+  connection: CHANGEME
+  gather_facts: CHANGEME
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ CHANGEME }}" 
+      user:           "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}"
+      use_ssl:        "{{ CHANGEME }}"
+    
+    var_state: &var_state
+      state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
+ 
+  vars_files: static_port_vars.yml
+
+  tasks:
+  - name: Check Tenant
+    cisco.aci.aci_tenant:
+      <<: *apic_info
+      tenant: "{{ CHANGEME }}"
+      state:  "query"
+    register: tenant_state
+
+  - name: Static Path binding for given EPG
+    cisco.aci.aci_static_binding_to_epg:
+      <<: *apic_info
+      <<: *var_state
+      tenant:           "{{ CHANGEME }}"
+      ap:               "{{ CHANGEME }}"
+      epg:              "{{ CHANGEME }}"
+      encap_id:         "{{ CHANGEME }}"
+      deploy_immediacy: "{{ CHANGEME }}"
+      interface_mode:   "{{ CHANGEME }}"
+      interface_type:   "{{ CHANGEME }}"
+      pod_id:           "{{ CHANGEME }}"
+      leafs:            "{{ CHANGEME }}"
+      interface:        "{{ CHANGEME }}"
+    with_items: "{{ CHANGEME }}"
+    when: tenant_state.current
