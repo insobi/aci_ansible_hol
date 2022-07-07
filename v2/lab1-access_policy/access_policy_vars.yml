@@ -1,0 +1,43 @@
+---
+vlan_pools:
+  - { name: "lab-VLAN",    alloc_mode: "static"  }
+  - { name: "vmware-VLAN", alloc_mode: "dynamic" }
+
+vlan_blocks:
+  - { pool_name: "lab-VLAN", alloc_mode: "static",  block_start: "2010", block_end: "2010" }
+  - { pool_name: "lab-VLAN", alloc_mode: "static",  block_start: "2020", block_end: "2020" }
+
+domains:
+  - { name: "lab-dom",    domain_type: "phys"                       }
+  - { name: "vmware-dom", domain_type: "vmm", vm_provider: "vmware" }
+
+link_level_policies:
+
+policy_cdp:
+  - { name: "lab-dcp_enable", admin_state: true }
+
+aeps:
+  - { aep_name: "lab-aep", infra_vlan: true, domain_name: "lab-dom",    domain_type: "phys"                       }
+  - { aep_name: "vmm-aep", infra_vlan: true, domain_name: "vmware-dom", domain_type: "vmm", vm_provider: "vmware" }
+
+interface_policy_groups:
+  - { policy_group: "lab-policy_group1", cdp_policy: "lab-dcp_enable", aep: "lab-aep", lag_type: "leaf" }
+  - { policy_group: "vmm-policy_group1", cdp_policy: "lab-dcp_enable", aep: "vmm-aep", lag_type: "leaf" }
+
+interface_profiles:
+  - { name: "lab-interfaceProfile1" }
+  - { name: "vmm-interfaceProfile1" }
+
+interface_selectors:
+  - { selector_name: "sel1", interface_profile: "lab-interfaceProfile1", policy_group: "lab-policy_group1", from_card: 1, to_card: 1, from_port: 1,  to_port: 20 }
+  - { selector_name: "sel1", interface_profile: "vmm-interfaceProfile1", policy_group: "vmm-policy_group1", from_card: 1, to_card: 1, from_port: 21, to_port: 40 }
+
+leaf_profiles:
+  - { name: "lab-leafProfile-101"     }
+  - { name: "vmm-leafProfile-101_102" }
+
+leaf_selectors:
+  - { interface_profile: "lab-interfaceProfile1", selector_name: "sel1", leaf_profile: "lab-leafProfile-101", from: 101, to: 101 }
+  - { interface_profile: "vmm-interfaceProfile1", selector_name: "sel1", leaf_profile: "vmm-leafProfile-101_102", from: 101, to: 102 }
+
+# state_all: absent

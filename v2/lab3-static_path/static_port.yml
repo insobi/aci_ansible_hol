@@ -1,0 +1,41 @@
+- hosts: apic
+  connection: local
+  gather_facts: no
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ ansible_host }}" 
+      user:           "{{ ansible_user }}" 
+      password:       "{{ ansible_password }}" 
+      validate_certs: "{{ validate_certs }}"
+      use_ssl:        "{{ use_ssl }}"
+    
+    var_state: &var_state
+      state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
+ 
+  vars_files: static_port_vars.yml
+
+  tasks:
+  - name: Check Tenant
+    cisco.aci.aci_tenant:
+      <<: *apic_info
+      tenant: "{{ tenant.name }}"
+      state:  "query"
+    register: tenant_state
+
+  - name: Static Path binding for given EPG
+    cisco.aci.aci_static_binding_to_epg:
+      <<: *apic_info
+      <<: *var_state
+      tenant:           "{{ tenant.name }}"
+      ap:               "{{ item.ap }}"
+      epg:              "{{ item.epg }}"
+      encap_id:         "{{ item.encap }}"
+      deploy_immediacy: "{{ item.immediacy }}"
+      interface_mode:   "{{ item.mode }}"
+      interface_type:   "{{ item.type }}"
+      pod_id:           "{{ item.pod }}"
+      leafs:            "{{ item.leaf }}"
+      interface:        "{{ item.interface }}"
+    with_items: "{{ static_paths }}"
+    when: tenant_state.current

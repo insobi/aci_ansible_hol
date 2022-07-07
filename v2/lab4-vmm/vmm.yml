@@ -1,0 +1,75 @@
+- hosts: apic
+  connection: local
+  gather_facts: no
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ ansible_host }}" 
+      user:           "{{ ansible_user }}" 
+      password:       "{{ ansible_password }}" 
+      validate_certs: "{{ validate_certs }}"
+      use_ssl:        "{{ use_ssl }}"
+    
+    var_state: &var_state
+      state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
+ 
+  vars_files: vmm_vars.yml
+
+  tasks:
+  - name: Task1 - VMM domain
+    cisco.aci.aci_domain:
+      <<: *apic_info
+      <<: *var_state
+      domain:         "{{ item.vmmDom }}"
+      domain_type:    vmm
+      vm_provider:    "{{ item.provider }}"
+    loop: "{{ vmm_domains }}"
+
+  - name: Task2 - VMM domain to VLAN pool
+    cisco.aci.aci_domain_to_vlan_pool:
+      <<: *apic_info
+      <<: *var_state
+      domain:               "{{ item.vmmDom }}"
+      domain_type:          vmm
+      pool:                 "{{ item.pool }}"
+      pool_allocation_mode: "{{ item.allocMode}}"
+      vm_provider:          "{{ item.provider }}"
+    loop: "{{ vmm_domains }}"
+
+  - name: Task3 - Credential to VMware VMM domain
+    cisco.aci.aci_vmm_credential:
+      <<: *apic_info
+      <<: *var_state
+      domain:               "{{ item.vmmDom }}"
+      name:                 "{{ item.credential }}"
+      credential_username:  "{{ vcenter.username }}"
+      credential_password:  "{{ vcenter.password }}"
+      vm_provider:          "{{ item.provider }}"
+    loop: "{{ vmm_domains }}"
+
+  - name: Task4 - Add controller to VMware VMM domain
+    cisco.aci.aci_vmm_controller:
+      <<: *apic_info
+      <<: *var_state
+      domain:              "{{ item.vmmDom }}"
+      name:                "{{ item.controller }}"
+      controller_hostname: "{{ vcenter.hostname }}"
+      dvs_version:         "{{ item.dvs_version }}"
+      vm_provider:         "{{ item.provider }}"
+      credentials:         "{{ item.credential }}"
+      datacenter:          "{{ item.controller }}"
+    loop: "{{ vmm_domains }}"
+
+  ## Required python packages: pyvmomi
+  - name: Task5 - Add Host to VMware dVS
+    community.vmware.vmware_dvs_host:
+      <<: *var_state
+      hostname:       "{{ vcenter.hostname }}"
+      username:       "{{ vcenter.username }}"
+      password:       "{{ vcenter.password }}"
+      validate_certs: "{{ vcenter.validate_certs }}"
+      esxi_hostname:  "{{ item.host }}"
+      switch_name:    "{{ item.switch_name }}"
+      vmnics:         "{{ item.vmnics }}"
+    loop: "{{ vcenter.esxi_hosts }}"
+    tags: task5
