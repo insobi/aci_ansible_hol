@@ -109,17 +109,6 @@
     cisco.aci.aci_epg_to_domain:
       <<: *apic_info
       <<: *var_state
-<<<<<<< HEAD:lab2-tenant/tenant.yml
-      tenant:      "{{ CHANGEME }}"
-      ap:          "{{ CHANGEME }}"
-      epg:         "{{ CHANGEME }}"
-      domain:      "{{ CHANGEME }}"
-      domain_type: "{{ CHANGEME }}"
-      vm_provider: "{{ CHANGEME }}"
-    with_items: "{{ CHANGEME }}"
-    when: task_tenant.current
-    tags: tn-task7
-=======
       tenant:      "{{ tenant.name }}"
       ap:          "{{ item.ap }}"
       epg:         "{{ item.name }}"
@@ -131,4 +120,3 @@
     - task_tenant.current 
     - domains[item.domain].domain_type == "vmm"
     tags: tn-task7, bind_domain
->>>>>>> lab-202207-solved:v2/lab2-tenant/tenant.yml
