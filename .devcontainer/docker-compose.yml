@@ -1,0 +1,9 @@
+version: '3.7'
+services:
+  devcontainer:
+    image: insobi/devcontainer:20220323
+    
+    volumes:
+      - ..:/workspace:cached
+
+    command: /bin/sh -c "while sleep 1000; do :; done"
