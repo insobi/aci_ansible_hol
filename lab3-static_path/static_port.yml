@@ -23,6 +23,7 @@
       state:  "query"
     register: tenant_state
 
+  # Tenants > (tenant) > Application Profiles > (ap) > Application EPGs > (epg) > Static Ports
   - name: Static Path binding for given EPG
     cisco.aci.aci_static_binding_to_epg:
       <<: *apic_info

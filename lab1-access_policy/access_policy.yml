@@ -16,6 +16,7 @@
   vars_files: access_policy_vars.yml
 
   tasks:
+  # Fabric > Access Policies > Pools > VLAN
   - name: Task1 - VLAN pool
     cisco.aci.aci_vlan_pool:
       <<: *apic_info
@@ -25,6 +26,7 @@
     loop: "{{ vlan_pools }}"
     tags: accp-task1, vlan_pool
 
+  # Fabric > Access Policies > Pools > VLAN > (VLAN Pool) > Encap Blocks(+)
   - name: Task2 - VLAN encap block
     cisco.aci.aci_vlan_pool_encap_block:
       <<: *apic_info
@@ -37,6 +39,7 @@
     loop: "{{ vlan_blocks }}"
     tags: accp-task2, vlan_pool, encap_block
 
+  # Fabric > Access Policies > Physical and External Domains > Physical Domains
   - name: Task3a - Physical Domain
     cisco.aci.aci_domain:
       <<: *apic_info
@@ -47,6 +50,7 @@
     when: item.domain_type == "phys"
     tags: accp-task3a, domain_phys
 
+  # Fabric > Access Policies > Physical and External Domains > Physical Domains
   - name: Task3b - VMM Domain
     cisco.aci.aci_domain:
       <<: *apic_info
@@ -58,6 +62,7 @@
     when: item.domain_type == "vmm"
     tags: accp-task3b, domain_vmm
 
+  # Fabric > Access Policies > Policies > Interface > CDP Interface
   - name: Task4 - CDP Interface Policy
     cisco.aci.aci_interface_policy_cdp:
       <<: *apic_info
@@ -67,6 +72,7 @@
     loop: "{{ policy_cdp }}"
     tags: accp-task4, policy_group, policy_cdp
 
+  # Fabric > Access Policies > Policies > Global > Attachable Access Entity Profiles
   - name: Task5 - AEP
     cisco.aci.aci_aep:
       <<: *apic_info
@@ -76,6 +82,7 @@
     loop: "{{ aeps }}"
     tags: accp-task5, aep, vlan 
 
+  # Fabric > Access Policies > Policies > Global > Attachable Access Entity Profiles > (AEP) > Domains(+)
   - name: Task6a - AEP to domain binding
     cisco.aci.aci_aep_to_domain:
       <<: *apic_info
@@ -87,6 +94,7 @@
     when: item.domain_type == "phys"
     tags: accp-task6a, aep, domain
 
+  # Fabric > Access Policies > Policies > Global > Attachable Access Entity Profiles > (AEP) > Domains(+)
   - name: Task6b - AEP to domain binding
     cisco.aci.aci_aep_to_domain:
       <<: *apic_info
@@ -99,6 +107,7 @@
     when: item.domain_type == "vmm"
     tags: accp-task6b, aep, domain
 
+  # Fabric > Access Policies > Interfaces > Leaf Interfaces > Policy Groups > Leaf Access Port
   - name: Task7 - Leaf Access Port Policy Group
     cisco.aci.aci_interface_policy_leaf_policy_group:
       <<: *apic_info
@@ -110,6 +119,7 @@
     loop: "{{ interface_policy_groups }}"
     tags: accp-task7, policy_group, aep, policy_cdp
 
+  # Fabric > Access Policies > Interfaces > Leaf Interfaces > Profiles
   - name: Task8 - Leaf interface profile
     cisco.aci.aci_interface_policy_leaf_profile:
       <<: *apic_info
@@ -118,6 +128,7 @@
     loop: "{{ interface_profiles }}"
     tags: accp-task8, interface_profile
 
+  # Fabric > Access Policies > Interfaces > Leaf Interfaces > Profiles > (profile) > Port Blocks
   - name: Task9 - Association port Selector to an Leaf Profile with a Policy Group
     cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
       <<: *apic_info
@@ -133,6 +144,7 @@
     loop: "{{ interface_selectors }}"
     tags: accp-task9, interface_profile, policy_group
 
+  # Fabric > Access Policies > Switches > Leaf Switches > Profiles
   - name: Task10 - Leaf Profile
     cisco.aci.aci_switch_policy_leaf_profile:
       <<: *apic_info
@@ -141,6 +153,7 @@
     loop: "{{ leaf_profiles }}"
     tags: accp-task10, leaf_profile
 
+  # Fabric > Access Policies > Switches > Leaf Switches > Profiles > (profile) > Leaf Selectors
   - name: Task11 - Switch policy leaf profile selector associated Node Block range (w/ policy group)
     cisco.aci.aci_switch_leaf_selector:
       <<: *apic_info
@@ -153,6 +166,7 @@
     loop: "{{ leaf_selectors }}"
     tags: accp-task11, leaf_profile, leaf_selector
 
+  # Fabric > Access Policies > Switches > Leaf Switches > Profiles > (profile) > Associated Interface Selector Profile
   - name: Task12 - Associating an interface selector profile to a switch policy leaf profile
     cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
       <<: *apic_info

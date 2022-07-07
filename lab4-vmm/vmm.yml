@@ -16,6 +16,7 @@
   vars_files: vmm_vars.yml
 
   tasks:
+  # Virtual Networking > VMM Domains > VMware
   - name: Task1 - VMM domain
     cisco.aci.aci_domain:
       <<: *apic_info
@@ -24,7 +25,9 @@
       domain_type:    vmm
       vm_provider:    "{{ item.provider }}"
     loop: "{{ vmm_domains }}"
+    tags: task1, vmm
 
+  # Virtual Networking > VMM Domains > VMware > (domain) > VLAN_Pool
   - name: Task2 - VMM domain to VLAN pool
     cisco.aci.aci_domain_to_vlan_pool:
       <<: *apic_info
@@ -35,7 +38,9 @@
       pool_allocation_mode: "{{ item.allocMode}}"
       vm_provider:          "{{ item.provider }}"
     loop: "{{ vmm_domains }}"
+    tags: task2, vmm
 
+  # Virtual Networking > VMM Domains > VMware > (domain) > vCenter Credentials
   - name: Task3 - Credential to VMware VMM domain
     cisco.aci.aci_vmm_credential:
       <<: *apic_info
@@ -46,7 +51,9 @@
       credential_password:  "{{ vcenter.password }}"
       vm_provider:          "{{ item.provider }}"
     loop: "{{ vmm_domains }}"
+    tags: task3, vmm_credential
 
+  # Virtual Networking > VMM Domains > VMware > (domain) > Controllers
   - name: Task4 - Add controller to VMware VMM domain
     cisco.aci.aci_vmm_controller:
       <<: *apic_info
@@ -59,6 +66,7 @@
       credentials:         "{{ item.credential }}"
       datacenter:          "{{ item.controller }}"
     loop: "{{ vmm_domains }}"
+    tags: task4, vmm_controller
 
   ## Required python packages: pyvmomi
   - name: Task5 - Add Host to VMware dVS
@@ -72,4 +80,4 @@
       switch_name:    "{{ item.switch_name }}"
       vmnics:         "{{ item.vmnics }}"
     loop: "{{ vcenter.esxi_hosts }}"
-    tags: task5
+    tags: task5, vmware_addhost
