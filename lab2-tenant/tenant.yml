@@ -1,6 +1,6 @@
-- hosts: CHANGEME
-  connection: CHANGEME
-  gather_facts: CHANGEME
+- hosts: apic
+  connection: local
+  gather_facts: no
   collections:
   - cisco.aci
 
@@ -18,14 +18,16 @@
   vars_files: tenant_vars.yml
 
   tasks:
+  # Tenants
   - name: task1 - Tenant
     cisco.aci.aci_tenant:
       <<: *apic_info
       tenant: "{{ CHANGEME }}"
       state:  "{{ state_all if state_all is defined else tenant.state if tenant.state is defined else 'present' }}"
     register: task_tenant
-    tags: always, tn-task1
+    tags: always, tn-task1, tenant
 
+  # Tenants > (tenant) > Networking > VRFs
   - name: task2 - VRF
     cisco.aci.aci_vrf:
       <<: *apic_info
@@ -34,8 +36,9 @@
       vrf:    "{{ CHANGEME }}"
     loop: "{{ CHANGEME }}"
     when: task_tenant.current
-    tags: tn-task2
+    tags: tn-task2, vrf
 
+  # Tenants > (tenant) > Networking > Bridge Domains
   - name: task3 - Bridge Domains
     cisco.aci.aci_bd:
       <<: *apic_info
@@ -45,8 +48,9 @@
       bd:     "{{ CHANGEME }}"
     loop: "{{ CHANGEME }}"
     when: task_tenant.current
-    tags: tn-task3
+    tags: tn-task3, bd
 
+  # Tenants > (tenant) > Networking > Bridge Domains > (bd) > Subnets
   - name: task4 - Bridge Domain Subnets
     cisco.aci.aci_bd_subnet:
       <<: *apic_info
@@ -58,8 +62,9 @@
       scope:   "{{ CHANGEME }}"
     loop: "{{ CHANGEME }}"
     when: task_tenant.current
-    tags: tn-task4
+    tags: tn-task4, subnet
 
+  # Tenants > (tenant) > Application Profiles
   - name: task5 - Application Profile
     cisco.aci.aci_ap:
       <<: *apic_info
@@ -68,8 +73,9 @@
       ap:     "{{ CHANGEME }}"
     loop: "{{ CHANGEME }}"
     when: task_tenant.current
-    tags: tn-task5
+    tags: tn-task5, ap
 
+  # Tenants > (tenant) > Application Profiles > (ap) > Application EPGs
   - name: task6 - EPG
     cisco.aci.aci_epg:
       <<: *apic_info
@@ -80,18 +86,37 @@
       epg:    "{{ CHANGEME }}"
     with_items: "{{ CHANGEME }}"
     when: task_tenant.current
-    tags: tn-task6
+    tags: tn-task6, epg
 
-  - name: task7 - EPG to Domain
+  # Tenants > (tenant) > Application Profiles > (ap) > Application EPGs > (epg) > Domains
+  - name: task7a - EPG to Physical Domain
     cisco.aci.aci_epg_to_domain:
       <<: *apic_info
       <<: *var_state
-      tenant:      "{{ CHANGEME }}"
-      ap:          "{{ CHANGEME }}"
-      epg:         "{{ CHANGEME }}"
-      domain:      "{{ CHANGEME }}"
-      domain_type: "{{ CHANGEME }}"
-      vm_provider: "{{ CHANGEME }}"
-    with_items: "{{ CHANGEME }}"
-    when: task_tenant.current
-    tags: tn-task7
+      tenant:      "{{ tenant.name }}"
+      ap:          "{{ item.ap }}"
+      epg:         "{{ item.name }}"
+      domain:      "{{ item.domain }}"
+      domain_type: "{{ domains[item.domain].domain_type }}"
+    with_items: "{{ epgs }}"
+    when: 
+    - task_tenant.current
+    - domains[item.domain].domain_type == "phys"
+    tags: tn-task7, bind_domain
+
+  # Tenants > (tenant) > Application Profiles > (ap) > Application EPGs > (epg) > Domains
+  - name: task7b - EPG to VMM Domain
+    cisco.aci.aci_epg_to_domain:
+      <<: *apic_info
+      <<: *var_state
+      tenant:      "{{ tenant.name }}"
+      ap:          "{{ item.ap }}"
+      epg:         "{{ item.name }}"
+      domain:      "{{ item.domain }}"
+      domain_type: "{{ domains[item.domain].domain_type }}"
+      vm_provider: "{{ domains[item.domain].vm_provider }}"
+    with_items: "{{ epgs }}"
+    when: 
+    - task_tenant.current 
+    - domains[item.domain].domain_type == "vmm"
+    tags: tn-task7, bind_domain

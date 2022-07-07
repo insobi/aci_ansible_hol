@@ -1,6 +1,6 @@
-- hosts: CHANGEME
-  connection: CHANGEME
-  gather_facts: CHANGEME
+- hosts: apic
+  connection: local
+  gather_facts: no
 
   vars:
     apic_info: &apic_info
@@ -16,7 +16,7 @@
   vars_files: access_policy_vars.yml
 
   tasks:
-  # Fabric > Access Policies > Pools > VLAN > (Create VLAN Pool)
+  # Fabric > Access Policies > Pools > VLAN
   - name: Task1 - VLAN pool
     cisco.aci.aci_vlan_pool:
       <<: *apic_info
