@@ -1,6 +1,6 @@
-- hosts: CHANGEME
-  connection: CHANGEME
-  gather_facts: CHANGEME
+- hosts: apic
+  connection: local
+  gather_facts: no
 
   vars:
     apic_info: &apic_info
