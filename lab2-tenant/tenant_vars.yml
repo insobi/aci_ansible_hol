@@ -23,7 +23,9 @@ epgs:
   - { name: "EPG_VLAN2010", ap: "AP", bd: "ADMIN"      , domain: "lab_dom" }
       
 domains:
-  lab_dom:
+  lab-dom:
+    domain_type: "phys"
+  vmware-dom:
     domain_type: "vmm"
     vm_provider: "vmware"
 
