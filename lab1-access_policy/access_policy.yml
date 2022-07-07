@@ -33,7 +33,7 @@
       pool_allocation_mode: "{{ CHANGEME }}"
       block_name:           ""
       block_start:          "{{ CHANGEME }}"
-      block_end:            "{{ iCHANGEME }}"
+      block_end:            "{{ CHANGEME }}"
     loop: "{{ CHANGEME }}"
     tags: accp-task2, vlan_pool, encap_block
 
