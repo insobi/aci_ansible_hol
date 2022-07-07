@@ -1,16 +1,16 @@
-- hosts: apic
-  connection: local
-  gather_facts: false
+- hosts: CHANGEME
+  connection: CHANGEME
+  gather_facts: CHANGEME
   collections:
   - cisco.aci
 
   vars:
     apic_info: &apic_info
-      host:           "{{ ansible_host }}" 
-      user:           "{{ ansible_user }}" 
-      password:       "{{ ansible_password }}" 
-      validate_certs: "{{ validate_certs }}"
-      use_ssl:        "{{ use_ssl }}"
+      host:           "{{ CHANGEME }}" 
+      user:           "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}"
+      use_ssl:        "{{ CHANGEME }}"
     
     var_state: &var_state
       state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
@@ -21,7 +21,7 @@
   - name: task1 - Tenant
     cisco.aci.aci_tenant:
       <<: *apic_info
-      tenant: "{{ tenant.name }}"
+      tenant: "{{ CHANGEME }}"
       state:  "{{ state_all if state_all is defined else tenant.state if tenant.state is defined else 'present' }}"
     register: task_tenant
     tags: always, tn-task1
@@ -30,9 +30,9 @@
     cisco.aci.aci_vrf:
       <<: *apic_info
       <<: *var_state
-      tenant: "{{ tenant.name }}"
-      vrf:    "{{ item.name }}"
-    loop: "{{ vrfs }}"
+      tenant: "{{ CHANGEME }}"
+      vrf:    "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task2
 
@@ -40,10 +40,10 @@
     cisco.aci.aci_bd:
       <<: *apic_info
       <<: *var_state
-      tenant: "{{ tenant.name }}"
-      vrf:    "{{ item.vrf }}"
-      bd:     "{{ item.name }}"
-    loop: "{{ bridge_domains }}"
+      tenant: "{{ CHANGEME }}"
+      vrf:    "{{ CHANGEME }}"
+      bd:     "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task3
 
@@ -51,12 +51,12 @@
     cisco.aci.aci_bd_subnet:
       <<: *apic_info
       <<: *var_state
-      tenant:  "{{ tenant.name }}"
-      bd:      "{{ item.bd }}"
+      tenant:  "{{ CHANGEME }}"
+      bd:      "{{ CHANGEME }}"
       gateway: "{{ item.subnet.split('/') | first }}"
       mask:    "{{ item.subnet.split('/') | last }}"
-      scope:   "{{ item.scope }}"
-    loop: "{{ subnets }}"
+      scope:   "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task4
 
@@ -64,9 +64,9 @@
     cisco.aci.aci_ap:
       <<: *apic_info
       <<: *var_state
-      tenant: "{{ tenant.name }}"
-      ap:     "{{ item.name }}"
-    loop: "{{ app_profiles }}"
+      tenant: "{{ CHANGEME }}"
+      ap:     "{{ CHANGEME }}"
+    loop: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task5
 
@@ -74,11 +74,11 @@
     cisco.aci.aci_epg:
       <<: *apic_info
       <<: *var_state
-      tenant: "{{ tenant.name }}"
-      bd:     "{{ item.bd }}"
-      ap:     "{{ item.ap }}"
-      epg:    "{{ item.name }}"
-    with_items: "{{ epgs }}"
+      tenant: "{{ CHANGEME }}"
+      bd:     "{{ CHANGEME }}"
+      ap:     "{{ CHANGEME }}"
+      epg:    "{{ CHANGEME }}"
+    with_items: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task6
 
@@ -86,12 +86,12 @@
     cisco.aci.aci_epg_to_domain:
       <<: *apic_info
       <<: *var_state
-      tenant:      "{{ tenant.name }}"
-      ap:          "{{ item.ap }}"
-      epg:         "{{ item.name }}"
-      domain:      "{{ item.domain }}"
-      domain_type: "{{ domains[item.domain].domain_type }}"
-      vm_provider: "{{ domains[item.domain].vm_provider }}"
-    with_items: "{{ epgs }}"
+      tenant:      "{{ CHANGEME }}"
+      ap:          "{{ CHANGEME }}"
+      epg:         "{{ CHANGEME }}"
+      domain:      "{{ CHANGEME }}"
+      domain_type: "{{ CHANGEME }}"
+      vm_provider: "{{ CHANGEME }}"
+    with_items: "{{ CHANGEME }}"
     when: task_tenant.current
     tags: tn-task7

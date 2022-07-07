@@ -1,14 +1,14 @@
-- hosts: apic
-  connection: local
-  gather_facts: no
+- hosts: CHANGEME
+  connection: CHANGEME
+  gather_facts: CHANGEME
 
   vars:
     apic_info: &apic_info
-      host:           "{{ ansible_host }}" 
-      user:           "{{ ansible_user }}" 
-      password:       "{{ ansible_password }}" 
-      validate_certs: "{{ validate_certs }}"
-      use_ssl:        "{{ use_ssl }}"
+      host:           "{{ CHANGEME }}" 
+      user:           "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}" 
+      use_ssl:        "{{ CHANGEME }}" 
     
     var_state: &var_state
       state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
@@ -20,56 +20,60 @@
     cisco.aci.aci_domain:
       <<: *apic_info
       <<: *var_state
-      domain:         "{{ item.vmmDom }}"
+      domain:        "{{ CHANGEME }}" 
       domain_type:    vmm
-      vm_provider:    "{{ item.provider }}"
-    loop: "{{ vmm_domains }}"
+      vm_provider:    "{{ CHANGEME }}" 
+    loop: "{{ CHANGEME }}" 
+    tags: task1, vmm
 
   - name: Task2 - VMM domain to VLAN pool
     cisco.aci.aci_domain_to_vlan_pool:
       <<: *apic_info
       <<: *var_state
-      domain:               "{{ item.vmmDom }}"
+      domain:               "{{ CHANGEME }}" 
       domain_type:          vmm
-      pool:                 "{{ item.pool }}"
-      pool_allocation_mode: "{{ item.allocMode}}"
-      vm_provider:          "{{ item.provider }}"
-    loop: "{{ vmm_domains }}"
+      pool:                 "{{ CHANGEME }}" 
+      pool_allocation_mode: "{{ CHANGEME }}" 
+      vm_provider:          "{{ CHANGEME }}" 
+    loop: "{{ CHANGEME }}" 
+    tags: task2, vmm
 
   - name: Task3 - Credential to VMware VMM domain
     cisco.aci.aci_vmm_credential:
       <<: *apic_info
       <<: *var_state
-      domain:               "{{ item.vmmDom }}"
-      name:                 "{{ item.credential }}"
-      credential_username:  "{{ vcenter.username }}"
-      credential_password:  "{{ vcenter.password }}"
-      vm_provider:          "{{ item.provider }}"
-    loop: "{{ vmm_domains }}"
+      domain:               "{{ CHANGEME }}" 
+      name:                 "{{ CHANGEME }}" 
+      credential_username:  "{{ CHANGEME }}" 
+      credential_password:  "{{ CHANGEME }}" 
+      vm_provider:          "{{ CHANGEME }}" 
+    loop: "{{ CHANGEME }}" 
+    tags: task3, vmm_credential
 
   - name: Task4 - Add controller to VMware VMM domain
     cisco.aci.aci_vmm_controller:
       <<: *apic_info
       <<: *var_state
-      domain:              "{{ item.vmmDom }}"
-      name:                "{{ item.controller }}"
-      controller_hostname: "{{ vcenter.hostname }}"
-      dvs_version:         "{{ item.dvs_version }}"
-      vm_provider:         "{{ item.provider }}"
-      credentials:         "{{ item.credential }}"
-      datacenter:          "{{ item.controller }}"
-    loop: "{{ vmm_domains }}"
+      domain:              "{{ CHANGEME }}" 
+      name:                "{{ CHANGEME }}" 
+      controller_hostname: "{{ CHANGEME }}" 
+      dvs_version:         "{{ CHANGEME }}" 
+      vm_provider:         "{{ CHANGEME }}" 
+      credentials:         "{{ CHANGEME }}" 
+      datacenter:          "{{ CHANGEME }}" 
+    loop: "{{ CHANGEME }}" 
+    tags: task4, vmm_controller
 
   ## Required python packages: pyvmomi
   - name: Task5 - Add Host to VMware dVS
     community.vmware.vmware_dvs_host:
       <<: *var_state
-      hostname:       "{{ vcenter.hostname }}"
-      username:       "{{ vcenter.username }}"
-      password:       "{{ vcenter.password }}"
-      validate_certs: "{{ vcenter.validate_certs }}"
-      esxi_hostname:  "{{ item.host }}"
-      switch_name:    "{{ item.switch_name }}"
-      vmnics:         "{{ item.vmnics }}"
-    loop: "{{ vcenter.esxi_hosts }}"
-    tags: task5
+      hostname:       "{{ CHANGEME }}" 
+      username:       "{{ CHANGEME }}" 
+      password:       "{{ CHANGEME }}" 
+      validate_certs: "{{ CHANGEME }}" 
+      esxi_hostname:  "{{ CHANGEME }}" 
+      switch_name:    "{{ CHANGEME }}" 
+      vmnics:         "{{ CHANGEME }}" 
+    loop: "{{ CHANGEME }}" 
+    tags: task5, vmware_addhost
