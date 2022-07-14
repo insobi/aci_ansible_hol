@@ -4,11 +4,11 @@
 
   vars:
     apic_info: &apic_info
-      host:           "{{ CHANGEME }}" 
-      user:           "{{ CHANGEME }}" 
-      password:       "{{ CHANGEME }}" 
-      validate_certs: "{{ CHANGEME }}"
-      use_ssl:        "{{ CHANGEME }}"
+      host:           "{{ ansible_host }}" 
+      user:           "{{ ansible_user }}" 
+      password:       "{{ ansible_password }}" 
+      validate_certs: "{{ validate_certs }}"
+      use_ssl:        "{{ use_ssl }}"
     
     var_state: &var_state
       state: "{{ state_all if state_all is defined else item.state if item.state is defined else 'present' }}"
@@ -19,7 +19,7 @@
   - name: Check Tenant
     cisco.aci.aci_tenant:
       <<: *apic_info
-      tenant: "{{ CHANGEME }}"
+      tenant: "{{ tenant.name }}"
       state:  "query"
     register: tenant_state
 
@@ -27,15 +27,15 @@
     cisco.aci.aci_static_binding_to_epg:
       <<: *apic_info
       <<: *var_state
-      tenant:           "{{ CHANGEME }}"
-      ap:               "{{ CHANGEME }}"
-      epg:              "{{ CHANGEME }}"
-      encap_id:         "{{ CHANGEME }}"
-      deploy_immediacy: "{{ CHANGEME }}"
-      interface_mode:   "{{ CHANGEME }}"
-      interface_type:   "{{ CHANGEME }}"
-      pod_id:           "{{ CHANGEME }}"
-      leafs:            "{{ CHANGEME }}"
-      interface:        "{{ CHANGEME }}"
-    with_items: "{{ CHANGEME }}"
+      tenant:           "{{ tenant.name }}"
+      ap:               "{{ item.ap }}"
+      epg:              "{{ item.epg }}"
+      encap_id:         "{{ item.encap }}"
+      deploy_immediacy: "{{ item.immediacy }}"
+      interface_mode:   "{{ item.mode }}"
+      interface_type:   "{{ item.type }}"
+      pod_id:           "{{ item.pod }}"
+      leafs:            "{{ item.leaf }}"
+      interface:        "{{ item.interface }}"
+    with_items: "{{ static_paths }}"
     when: tenant_state.current
