@@ -23,7 +23,7 @@
       <<: *var_state
       pool:                 "{{ item.name }}"
       pool_allocation_mode: "{{ item.alloc_mode }}"
-    loop: "{{ CHANGEME }}"
+    loop: "{{ vlan_pools }}"
     tags: accp-task1, vlan_pool
 
   # Fabric > Access Policies > Pools > VLAN > (VLAN Pool) > Encap Blocks(+)
@@ -36,7 +36,7 @@
       block_name:           ""
       block_start:          "{{ item.block_start }}"
       block_end:            "{{ item.block_end }}"
-    loop: "{{ CHANGEME }}"
+    loop: "{{ vlan_blocks }}"
     tags: accp-task2, vlan_pool, encap_block
 
   # Fabric > Access Policies > Physical and External Domains > Physical Domains
@@ -48,7 +48,7 @@
       domain_type: "{{ item.domain_type }}"
     loop: "{{ domains }}"
     when: item.domain_type == "phys"
-    tags: accp-task3a, domain_phys
+    tags: accp-task3a, domain, domain_phys
 
   # Fabric > Access Policies > Physical and External Domains > Physical Domains
   - name: Task3b - VMM Domain
@@ -60,7 +60,7 @@
       vm_provider: "{{ item.vm_provider }}"
     loop: "{{ domains }}"
     when: item.domain_type == "vmm"
-    tags: accp-task3b, domain_vmm
+    tags: accp-task3b, domain, domain_vmm
 
   # Fabric > Access Policies > Policies > Interface > CDP Interface
   - name: Task4 - CDP Interface Policy
@@ -80,7 +80,7 @@
       aep:        "{{ item.aep_name }}"
       infra_vlan: "{{ item.infra_vlan }}"
     loop: "{{ aeps }}"
-    tags: accp-task5, aep, vlan 
+    tags: accp-task5, aep
 
   # Fabric > Access Policies > Policies > Global > Attachable Access Entity Profiles > (AEP) > Domains(+)
   - name: Task6a - AEP to domain binding
@@ -92,7 +92,7 @@
       domain_type: "{{ item.domain_type }}"
     loop: "{{ aeps }}"
     when: item.domain_type == "phys"
-    tags: accp-task6a, aep, domain
+    tags: accp-task6a, aep, domain, domain_phys
 
   # Fabric > Access Policies > Policies > Global > Attachable Access Entity Profiles > (AEP) > Domains(+)
   - name: Task6b - AEP to domain binding
@@ -105,7 +105,7 @@
       vm_provider: "{{ item.vm_provider }}"
     loop: "{{ aeps }}"
     when: item.domain_type == "vmm"
-    tags: accp-task6b, aep, domain
+    tags: accp-task6b, aep, domain, domain_vmm
 
   # Fabric > Access Policies > Interfaces > Leaf Interfaces > Policy Groups > Leaf Access Port
   - name: Task7 - Leaf Access Port Policy Group
