@@ -1,4 +1,4 @@
-# Lab1 - Access Policy 배포
+# Lab1 - Access Policy 작업
 
 #### Case 1
 
