@@ -23,7 +23,36 @@
       state:  "query"
     register: tenant_state
 
-  - name: task2 - Static Path binding for given EPG
+  - debug: var=tenant_state.current
+
+  - name: task2 - If tenant doesn't exists, stop task
+    debug: msg="If tenant doesn't exists, stop task"
+    failed_when: not tenant_state.current
+
+  - name: task3 - Check EPG
+    cisco.aci.aci_epg:
+      <<: *apic_info
+      tenant: "{{ tenant.name }}"
+      bd:     "{{ item.bd }}"
+      ap:     "{{ item.ap }}"
+      epg:    "{{ item.name }}"
+      state:  "query"
+    with_items: "{{ epgs }}"
+    register: test
+
+  - name: task4 - Get the number of EPG existed
+    set_fact:
+      fvAEPg: "{{ test | json_query('results[].current[].fvAEPg.attributes.{dn:dn}') }}"
+  
+  - debug: var=fvAEPg
+
+  - debug: var=epgs
+
+  - name: task5 - If EPG doesn't exists, stop task
+    debug: msg="If EPG doesn't exists, stop task"
+    failed_when: "{{ fvAEPg | length != epgs | length }}"
+
+  - name: task6 - Static Path binding for given EPG
     cisco.aci.aci_static_binding_to_epg:
       <<: *apic_info
       <<: *var_state
@@ -38,5 +67,4 @@
       leafs:            "{{ item.leaf }}"
       interface:        "{{ item.interface }}"
     with_items: "{{ static_paths }}"
-    when: tenant_state.current
     tags: rspath-task2, static_path

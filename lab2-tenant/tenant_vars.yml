@@ -21,7 +21,7 @@ epgs:
   - { name: "EPG_VLAN2020", ap: "AP", bd: "COMPUTE_SVC", domain: "vmware-dom" }
   - { name: "EPG_VLAN2030", ap: "AP", bd: "STORAGE_SVC", domain: "vmware-dom" }
   - { name: "EPG_VLAN2010", ap: "AP", bd: "ADMIN"      , domain: "lab-dom" }
-      
+     
 domains:
   lab-dom:
     domain_type: "phys"

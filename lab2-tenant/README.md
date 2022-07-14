@@ -1,4 +1,4 @@
-# Lab1 - 논리구성 작업
+# Lab2 - 논리구성 작업
 
 #### Case 1
 
@@ -40,7 +40,7 @@ ansible-playbook tenant.yml --tags bd --skip-tags epg
 
 ```yaml
 bridge_domains:
-  - { name: "COMPUTE_SVC", vrf: "DEMO", state: "absent" }
+  - { name: "COMPUTE2_SVC", vrf: "DEMO", state: "absent" }
 ```
 
 ```
