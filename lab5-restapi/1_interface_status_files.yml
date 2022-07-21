@@ -1,0 +1,49 @@
+---
+- hosts: apic
+  connection: local
+  gather_facts: no
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ ansible_host }}" 
+      user:           "{{ ansible_user }}" 
+      password:       "{{ ansible_password }}" 
+      validate_certs: "{{ validate_certs }}"
+      use_ssl:        "{{ use_ssl }}"
+
+  tasks:
+    - name: "APIC REST API 호출 - 전체 인터페이스 상태정보 수집"
+      cisco.aci.aci_rest:
+        <<: *apic_info
+        path:   "/api/class/ethpmPhysIf.json"
+        method: "get"
+        content: null
+      register: interfaces
+
+    - name: "모든 정보를 Json 형식으로 저장"
+      ansible.builtin.copy: 
+        content: "{{ interfaces | to_nice_json }}"
+        dest: outputs/output1_raw.json
+        
+    - name: "특정 속성만 뽑아서 변수로 저장"
+      set_fact:
+        interfaces_status: "{{ interfaces | 
+          json_query(
+            'imdata[].ethpmPhysIf.attributes.{
+              dn:dn, 
+              operSt:operSt, 
+              operMode:operMode, 
+              operSpeed:operSpeed
+            }'
+          ) }}"
+
+    - name: "선택된 정보만 Json 형식으로 저장"
+      ansible.builtin.copy: 
+        content: "{{ interfaces_status | to_nice_json }}"
+        dest: outputs/output1.json
+
+    - name: "선택된 정보만 CSV 형식으로 저장"
+      ansible.builtin.template: 
+        src: template/output1_csv.j2
+        dest: outputs/output1.csv
+
