@@ -22,14 +22,12 @@
       tenant: "{{ tenant.name }}"
       state:  "query"
     register: tenant_state
-    tags: always
 
   - name: task2 - pre-checking for Tenant
     ansible.builtin.assert:
       that:        "tenant_state.current"
       fail_msg:    "no the tenant exists"
       success_msg: "the tenant exists"
-    tags: always
 
   - name: task3 - querying EPGs for pre-checking
     cisco.aci.aci_epg:
@@ -41,7 +39,6 @@
       state:  "query"
     with_items: "{{ epgs }}"
     register: query_result1
-    tags: always
 
   - name: task4 - set variable for pre-checking
     set_fact:
@@ -58,7 +55,6 @@
       that:        existing_epgs | length == epgs | length
       fail_msg:    "Some EPG is not existing"
       success_msg: "All EPG is existing"
-    tags: always
 
   - name: task6 - querying static ports for pre-checking
     cisco.aci.aci_static_binding_to_epg:
@@ -76,12 +72,10 @@
       interface:        "{{ item.interface }}"
     with_items: "{{ static_paths }}"
     register: query_result2
-    tags: always
 
   - name: task7 - set variable for pre-checking
     set_fact: 
       existing_static_paths: "{{ query_result2 | json_query('results[].current[].{fvRsPathAtt:fvRsPathAtt}') }}"
-    tags: always
 
   # - name: debug - query results
   #   debug: msg="{{ query_result2 }}"
@@ -97,7 +91,6 @@
       that: existing_static_paths | length == 0
       fail_msg:    stopped executing tasks forcefully because EPGs you intend to create is already existing
       success_msg: no static bindings existing
-    tags: always
     
   - name: task10 - binding static port to EPG
     cisco.aci.aci_static_binding_to_epg:
