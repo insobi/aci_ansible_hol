@@ -1,0 +1,74 @@
+---
+- hosts: apic
+  connection: local
+  gather_facts: no
+
+  vars:
+    apic_info: &apic_info
+      host:           "{{ ansible_host }}" 
+      user:           "{{ ansible_user }}" 
+      password:       "{{ ansible_password }}" 
+      validate_certs: "{{ validate_certs }}"
+      use_ssl:        "{{ use_ssl }}"
+
+  tasks:
+    - name: "APIC REST API 호출 - 전체 인터페이스 상태정보 수집"
+      cisco.aci.aci_rest:
+        <<: *apic_info
+        path:   "/api/class/ethpmPhysIf.json"
+        method: "get"
+      register: interfaces
+        
+    - name: "특정 속성만 뽑아서 변수로 저장"
+      set_fact:
+        interfaces_status: "{{ interfaces | 
+          json_query(
+            'imdata[].ethpmPhysIf.attributes.{
+              dn:dn, 
+              operSt:operSt, 
+              operMode:operMode, 
+              operSpeed:operSpeed
+            }'
+          ) }}"
+      
+    - name: Interface down 확인
+      ansible.builtin.assert:
+        that: true
+      loop: "{{ interfaces_status }}"
+      when:  "{{ item.operSt != 'up' }}"
+
+    - name: CSV 파일 생성
+      ansible.builtin.template: 
+        src: template/output2_csv.j2
+        dest: outputs/interface_down.csv
+
+    - name: CSV 파일 읽기
+      debug: msg="{{lookup('file', 'outputs/interface_down.csv') }}"
+      register:   interface_down
+      no_log: yes 
+
+    - name: 웹엑스 메시지 전송
+      cisco_spark:
+        recipient_type:   roomId
+        recipient_id:     "{{ roomID }}"
+        message_type:     markdown
+        personal_token:   "{{ bot_token }}"
+        msg:              "인터페이스 다운 발생 - 확인요망! - sent by OOO"
+        # msg:              "{{ interface_down.msg }}"
+
+    - name: 담당자로 이메일 전송 (엑셀파일 첨부)
+      community.general.mail:
+        host:     "{{ outlook_host }}"
+        port:     "{{ outlook_port }}"
+        username: "{{ outlook_username }}"
+        password: "{{ outlook_password }}"
+        from:     "{{ outlook_username }}"
+        to :      "{{ outlook_receiver }}"
+        subject:  "[ACI 자동화 데모] 인터페이스 다운 상태 알림"
+        subtype:  html
+        body:     "<center><img width=1000 height=562 src=\"https://storage.googleapis.com/blogs-images/ciscoblogs/1/2020/05/Slide1-1.jpeg\"><h1>Cisco Customer Success는<br>고객 여러분의 성공을 도와드립니다.</h1></center>"
+        secure:   starttls
+        headers:  "Content-type=text/html"
+        attach: 
+          - "outputs/interface_down.csv"
+    

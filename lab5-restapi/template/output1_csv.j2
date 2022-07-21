@@ -1,0 +1,11 @@
+POD,Node,Interface,Mode,Speed,Status
+{% for item in interfaces_status %}
+{% set pod              = item.dn.split("/")[1].split("-")[1] %}
+{% set node             = item.dn.split("/")[2].split("-")[1] %}
+{% set interface_pre    = item.dn.split("/")[4].split("-")[1] %}
+{% set interface_post   = item.dn.split("/")[5] %}
+{% set operMode         = item.operMode %}
+{% set operSpeed        = item.operSpeed %}
+{% set operSt           = item.operSt %}
+{{ pod }},{{ node }},{{ interface_pre }}/{{ interface_post }},{{ operMode }},{{ operSpeed }},{{ operSt }}
+{% endfor %}
