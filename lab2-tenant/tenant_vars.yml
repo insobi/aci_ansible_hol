@@ -1,5 +1,6 @@
 tenant:
   name: "ansible-tenant1"
+  desc: "DEMO"
 
 vrfs:
   - { name: "DEMO" }

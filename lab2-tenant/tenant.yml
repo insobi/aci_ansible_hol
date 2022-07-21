@@ -22,7 +22,8 @@
   - name: task1 - Tenant
     cisco.aci.aci_tenant:
       <<: *apic_info
-      tenant: "{{ tenant.name }}"
+      tenant:      "{{ tenant.name }}"
+      description: "{{ tenant.desc if tenant.desc is defined else '' }}"
       state:  "{{ state_all if state_all is defined else tenant.state if tenant.state is defined else 'present' }}"
     register: task_tenant
     tags: tn-task1, tn
