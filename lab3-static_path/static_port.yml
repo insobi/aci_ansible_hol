@@ -60,13 +60,13 @@
     cisco.aci.aci_static_binding_to_epg:
       <<: *apic_info
       state: query
-      tenant:           "{{ tenant.name }}"
-      ap:               "{{ item.ap }}"
-      epg:              "{{ item.epg }}"
-      encap_id:         "{{ item.encap }}"
-      deploy_immediacy: "{{ item.immediacy }}"
-      interface_mode:   "{{ item.mode }}"
-      interface_type:   "{{ item.type }}"
+      # tenant:           "{{ tenant.name }}"
+      # ap:               "{{ item.ap }}"
+      # epg:              "{{ item.epg }}"
+      # encap_id:         "{{ item.encap }}"
+      # deploy_immediacy: "{{ item.immediacy }}"
+      # interface_mode:   "{{ item.mode }}"
+      # interface_type:   "{{ item.type }}"
       pod_id:           "{{ item.pod }}"
       leafs:            "{{ item.leaf }}"
       interface:        "{{ item.interface }}"
